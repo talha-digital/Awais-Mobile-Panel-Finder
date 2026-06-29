@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0B2E6B" />
+    <meta name="description" content="Awais Mobile Hub — Repair | Service" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AwaisHub" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Awais Mobile Hub</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='8' width='50' height='84' rx='8' fill='none' stroke='%230B2E6B' stroke-width='6'/><rect x='31' y='18' width='38' height='64' rx='2' fill='%230B2E6B' opacity='0.2'/><path d='M62 68 L76 82 L82 76 L68 62 Z' fill='%23C5161D'/><line x1='65' y1='65' x2='52' y2='52' stroke='%23C5161D' stroke-width='4' stroke-linecap='round'/><circle cx='42' cy='46' r='12' fill='none' stroke='%23F5B301' stroke-width='4'/><line x1='33' y1='55' x2='22' y2='66' stroke='%23F5B301' stroke-width='4' stroke-linecap='round'/></svg>">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- App Lock Screen -->
+    <div id="authScreen"
+        style="display:none; position:fixed; inset:0; z-index:9999; background:var(--bg); flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+        <div class="logo" style="margin-bottom:30px; transform:scale(1.5);">
+            <div class="logo-icon">
+                <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="25" y="8" width="50" height="84" rx="8" fill="none" stroke="currentColor"
+                        stroke-width="6" />
+                    <rect x="31" y="18" width="38" height="64" rx="2" fill="#0B2E6B" opacity="0.2" />
+                    <path d="M62 68 L76 82 L82 76 L68 62 Z" fill="#C5161D" />
+                    <line x1="65" y1="65" x2="52" y2="52" stroke="#C5161D" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="42" cy="46" r="12" fill="none" stroke="#F5B301" stroke-width="4" />
+                    <line x1="33" y1="55" x2="22" y2="66" stroke="#F5B301" stroke-width="4" stroke-linecap="round" />
+                </svg>
+            </div>
+            <div class="logo-text">Awais Mobile <span>Hub</span></div>
+        </div>
+        <h2 style="margin-bottom:15px;color:var(--text);font-size:18px;">App Locked</h2>
+        <input type="password" id="authPassword" class="form-input" placeholder="Enter Password"
+            style="max-width:300px; margin-bottom:10px; text-align:center;">
+        <div style="display:flex; gap:10px; width:100%; max-width:300px;">
+            <button class="btn btn-primary" id="authSubmit">Unlock</button>
+        </div>
+        <button id="authRecoverBtn"
+            style="margin-top:20px; background:none; border:none; color:var(--text3); text-decoration:underline; cursor:pointer; font-size:13px;">Forgot
+            Password?</button>
+    </div>
+
+    <div id="app" style="display:none;">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="header-row">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="25" y="8" width="50" height="84" rx="8" fill="none" stroke="currentColor"
+                                stroke-width="6" />
+                            <rect x="31" y="18" width="38" height="64" rx="2" fill="#0B2E6B" opacity="0.2" />
+                            <path d="M62 68 L76 82 L82 76 L68 62 Z" fill="#C5161D" />
+                            <line x1="65" y1="65" x2="52" y2="52" stroke="#C5161D" stroke-width="4"
+                                stroke-linecap="round" />
+                            <circle cx="42" cy="46" r="12" fill="none" stroke="#F5B301" stroke-width="4" />
+                            <line x1="33" y1="55" x2="22" y2="66" stroke="#F5B301" stroke-width="4"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="logo-text">Awais Mobile <span>Hub</span></div>
+                </div>
+                <div class="hdr-actions">
+                    <button class="icon-btn" id="favBtn" title="Favorites" aria-label="Favorites">⭐</button>
+                    <button class="icon-btn" id="histBtn" title="Search history" aria-label="Search history">🕐</button>
+                    <button class="icon-btn" id="impHistBtn" title="Import history"
+                        aria-label="Import history">📥</button>
+                    <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">⚙️</button>
+                </div>
+            </div>
+
+            <div class="search-wrap">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input type="search" id="searchInput" placeholder="Search model, code, brand, price, service type…"
+                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                    aria-label="Search panels" />
+                <button class="clear-btn" id="clearBtn" aria-label="Clear search">✕</button>
+            </div>
+
+            <div class="filter-row">
+                <nav class="brand-tabs" id="brandTabs" role="tablist" aria-label="Filter by brand"></nav>
+                <select id="listFilter" title="Filter by source list" aria-label="Filter by source list">
+                    <option value="All">All Lists</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <span id="resultCount">0 panels — import a list to get started</span>
+            <span style="font-size:11px;color:var(--text4)">Repair | Service</span>
+        </div>
+
+        <!-- VIEWS -->
+        <div id="searchView" class="content">
+            <div id="recentSection" style="display:none">
+                <div class="section-label">Recent searches</div>
+                <div class="recent-searches" id="recentSearches"></div>
+                <div style="height:12px"></div>
+            </div>
+            <div class="results-grid" id="results" role="list" aria-live="polite" aria-atomic="false"></div>
+        </div>
+
+        <div id="listsView" class="content" style="display:none">
+            <div class="view-header">📋 Lists Manager</div>
+            <div id="listsContent"></div>
+            <!-- Floating Action Button for Import -->
+            <button class="fab-btn" id="importBtn" title="Import List" aria-label="Import List">➕</button>
+        </div>
+
+        <div id="trashView" class="content" style="display:none">
+            <div class="view-header">🗑 Trash Bin</div>
+            <div id="trashContent"></div>
+        </div>
+
+    </div><!-- #app -->
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-btn active" data-view="search">
+            <span class="nav-icon">🔍</span>Search
+        </button>
+        <button class="nav-btn" data-view="lists">
+            <span class="nav-icon">📋</span>Lists
+        </button>
+        <button class="nav-btn" data-view="trash">
+            <span class="nav-icon">🗑</span>Trash
+        </button>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-overlay" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="settingsTitle">⚙️ Settings</div>
+                <button class="modal-close" id="settingsClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">👤 User Profile</label>
+                    <input type="text" id="setUsername" class="form-input" placeholder="Set Username (e.g. Awais)" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🎨 Appearance</label>
+                    <select id="setTheme" class="form-select">
+                        <option value="system">🖥 System</option>
+                        <option value="light">☀️ Light</option>
+                        <option value="dark">🌙 Dark</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="padding-top:10px; border-top:1px solid var(--border)">
+                    <label class="form-label">🔒 Security & App Lock</label>
+                    <div style="display:flex;gap:10px;margin-bottom:10px;">
+                        <button id="setPassBtn" class="btn btn-secondary" style="flex:1">Set Password</button>
+                        <button id="removePassBtn" class="btn btn-danger-sm" style="flex:1; display:none;">Remove
+                            Password</button>
+                    </div>
+                    <div id="passSection"
+                        style="display:none; background:var(--surface2); padding:10px; border-radius:var(--radius-xs); border:1px solid var(--border);">
+                        <input type="password" id="newPass" class="form-input" placeholder="New Password"
+                            style="margin-bottom:8px;">
+                        <input type="text" id="secQuestion" class="form-input"
+                            placeholder="Security Question (e.g. Favorite Color?)" style="margin-bottom:8px;">
+                        <input type="text" id="secAnswer" class="form-input" placeholder="Recovery Answer"
+                            style="margin-bottom:8px;">
+                        <button id="savePassBtn" class="btn btn-primary">Save Security Settings</button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="padding-top:10px; border-top:1px solid var(--border)">
+                    <label class="form-label">💾 Backup & Restore</label>
+                    <div class="form-hint" style="margin-bottom:10px;">Export or restore your permanent offline
+                        database.</div>
+                    <div style="display:flex; gap:10px;">
+                        <button id="exportBtn" class="btn btn-secondary">📥 Export Backup</button>
+                        <button id="importDBBtn" class="btn btn-secondary">📤 Restore</button>
+                        <input type="file" id="importDBFile" accept=".json" hidden>
+                    </div>
+                </div>
+
+                <div class="form-group" id="installSection"
+                    style="padding-top:10px; border-top:1px solid var(--border)">
+                    <label class="form-label">📱 PWA Installation</label>
+                    <div class="form-hint" style="margin-bottom:10px;">Install the application to run it natively
+                        without browser controls. It works offline and permanently saves your lists.</div>
+
+                    <!-- Install Button (Hidden by default until the browser confirms PWA readiness) -->
+                    <button id="installAppBtn" class="btn btn-primary" style="display:none; width:100%;">📥 Install
+                        App</button>
+
+                    <!-- Friendly Explanation (Visible by default or when installation is unavailable) -->
+                    <div id="installUnavailableMsg"
+                        style="background:var(--surface2); padding:10px; border-radius:var(--radius-xs); border:1px solid var(--border); text-align:center; font-size:13px; color:var(--text3);">
+                        ℹ️ App installation is currently unavailable. It may already be installed on your device, or
+                        your browser might not support PWA installations.
+                    </div>
+                </div>
+
+                <div class="form-group" style="padding-top:10px; border-top:1px solid var(--border); margin-top:20px;">
+                    <label class="form-label" style="color:var(--danger)">⚠️ Danger Zone</label>
+                    <button id="resetAppBtn" class="btn btn-danger">Reset Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT MODAL -->
+    <div class="modal-overlay" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="importTitle">➕ Import WhatsApp Price List</div>
+                <button class="modal-close" id="importClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="listNameInput">List Name <span
+                            style="color:var(--danger)">*</span></label>
+                    <input type="text" id="listNameInput" class="form-input" placeholder="e.g. Awais June 2026 Update"
+                        autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="importText">WhatsApp Price List</label>
+                    <textarea id="importText" class="form-textarea"
+                        placeholder="Paste the raw WhatsApp price list here…"></textarea>
+                    <div class="import-preview" id="importPreview"></div>
+                </div>
+            </div>
+            <div class="modal-ftr">
+                <button class="btn btn-secondary" id="importCancel">Cancel</button>
+                <button class="btn btn-primary" id="importConfirm">Import Panels</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUPLICATE MODAL -->
+    <div class="modal-overlay" id="dupeModal" role="dialog" aria-modal="true" aria-labelledby="dupeTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="dupeTitle">⚠️ Duplicates Detected</div>
+                <button class="modal-close" id="dupeClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="dupeCount"></div>
+                <div id="dupeList"></div>
+                <div style="margin-top:14px;font-size:13px;color:var(--text3)">Choose what to do with the duplicate
+                    panels:</div>
+            </div>
+            <div class="modal-ftr" style="flex-wrap:wrap">
+                <button class="btn btn-secondary" id="dupeSkip" style="flex:1 0 30%">⏭ Skip</button>
+                <button class="btn btn-secondary" id="dupeReplace" style="flex:1 0 30%">🔄 Replace</button>
+                <button class="btn btn-primary" id="dupeKeepBoth" style="flex:1 0 30%">➕ Keep both</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PANEL MODAL -->
+    <div class="modal-overlay" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="editTitle">✏️ Edit Panel</div>
+                <button class="modal-close" id="editClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId" />
+                <div class="form-group"><label class="form-label">Model Code</label><input type="text" id="editCode"
+                        class="form-input" /></div>
+                <div class="form-group"><label class="form-label">Phone Name</label><input type="text" id="editName"
+                        class="form-input" /></div>
+                <div class="form-group"><label class="form-label">Brand</label><input type="text" id="editBrand"
+                        class="form-input" /></div>
+                <div class="form-group"><label class="form-label">Price</label><input type="text" id="editPrice"
+                        class="form-input" /></div>
+            </div>
+            <div class="modal-ftr">
+                <button class="btn btn-secondary" id="editCancel">Cancel</button>
+                <button class="btn btn-primary" id="editSave">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPLACE LIST MODAL -->
+    <div class="modal-overlay" id="replaceModal" role="dialog" aria-modal="true" aria-labelledby="replaceTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="replaceTitle">🔄 Replace List</div>
+                <button class="modal-close" id="replaceClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="replaceListId" />
+                <div style="margin-bottom:12px;font-size:13px;color:var(--text3)">
+                    Replacing: <strong id="replaceListName" style="color:var(--text)"></strong><br><br>Old panels move
+                    to Trash. Favorites preserved by code matching.
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Price List</label>
+                    <textarea id="replaceText" class="form-textarea" placeholder="Paste the updated list…"></textarea>
+                </div>
+            </div>
+            <div class="modal-ftr">
+                <button class="btn btn-secondary" id="replaceCancel">Cancel</button>
+                <button class="btn btn-primary" id="replaceConfirm">Replace List</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAVORITES MODAL -->
+    <div class="modal-overlay" id="favModal" role="dialog" aria-modal="true" aria-labelledby="favTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="favTitle">⭐ Favorites</div>
+                <button class="modal-close" id="favClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body" id="favBody"></div>
+        </div>
+    </div>
+
+    <!-- SEARCH HISTORY MODAL -->
+    <div class="modal-overlay" id="histModal" role="dialog" aria-modal="true" aria-labelledby="histTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="histTitle">🕐 Search History</div>
+                <button class="modal-close" id="histClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body" id="histBody"></div>
+            <div class="modal-ftr">
+                <button class="btn btn-danger" id="clearHistBtn">Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORT HISTORY MODAL -->
+    <div class="modal-overlay" id="impHistModal" role="dialog" aria-modal="true" aria-labelledby="impHistTitle">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div class="modal-title" id="impHistTitle">📥 Import History</div>
+                <button class="modal-close" id="impHistClose" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="hist-controls" style="display:flex; gap:8px; margin-bottom:10px;">
+                    <input type="text" id="impSearch" placeholder="Search histories..." class="form-input"
+                        style="flex:1">
+                    <select id="impSort" class="form-select" style="width:auto">
+                        <option value="new">Newest</option>
+                        <option value="old">Oldest</option>
+                    </select>
+                </div>
+                <div id="impHistBody"></div>
+            </div>
+            <div class="modal-ftr">
+                <button class="btn btn-danger" id="clearImpHistBtn">Clear All History</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
