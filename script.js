@@ -818,13 +818,28 @@ function setupEvents() {
     $('resetAppBtn')?.addEventListener('click', resetApplication);
 
     // PWA Installation Handling
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+    // 1. Initial State Check on Load
+    if (isStandalone) {
+        if ($('installAppBtn')) $('installAppBtn').style.display = 'none';
+        if ($('installUnavailableMsg')) {
+            $('installUnavailableMsg').style.display = 'block';
+            $('installUnavailableMsg').innerHTML = '✅ Already Installed';
+        }
+    }
+
+    // 2. Capture the install prompt
     window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault();
         App_installPrompt = e;
-        if ($('installAppBtn')) $('installAppBtn').style.display = 'block';
-        if ($('installUnavailableMsg')) $('installUnavailableMsg').style.display = 'none';
+        if (!isStandalone) {
+            if ($('installAppBtn')) $('installAppBtn').style.display = 'block';
+            if ($('installUnavailableMsg')) $('installUnavailableMsg').style.display = 'none';
+        }
     });
 
+    // 3. Handle the Install button click
     $('installAppBtn')?.addEventListener('click', async () => {
         if (!App_installPrompt) return;
         App_installPrompt.prompt();
@@ -836,8 +851,18 @@ function setupEvents() {
             $('installAppBtn').style.display = 'none';
             if ($('installUnavailableMsg')) {
                 $('installUnavailableMsg').style.display = 'block';
-                $('installUnavailableMsg').innerHTML = '✅ Awais Mobile Hub is installed and running natively.';
+                $('installUnavailableMsg').innerHTML = '✅ Application Installed Successfully';
             }
+        }
+    });
+
+    // 4. Listen for native OS installation completion
+    window.addEventListener('appinstalled', () => {
+        App_installPrompt = null;
+        if ($('installAppBtn')) $('installAppBtn').style.display = 'none';
+        if ($('installUnavailableMsg')) {
+            $('installUnavailableMsg').style.display = 'block';
+            $('installUnavailableMsg').innerHTML = '✅ Application Installed Successfully';
         }
     });
 
@@ -889,7 +914,16 @@ async function init() {
     scheduleRender();
     setupEvents();
 
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./service-worker.js').catch(() => { }); }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(reg => {
+                    console.log('Service Worker registered successfully:', reg.scope);
+                    reg.update(); // Automatically check for updates
+                })
+                .catch(err => console.error('Service Worker registration failed:', err));
+        });
+    }
 
     if (State.settings.password) {
         $('authScreen').style.display = 'flex';
