@@ -1,0 +1,23 @@
+{
+    "name": "Awais Mobile Hub",
+    "short_name": "AwaisHub",
+    "description": "Repair | Service",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#F8F9FA",
+    "theme_color": "#0B2E6B",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='8' width='50' height='84' rx='8' fill='none' stroke='%230B2E6B' stroke-width='6'/><rect x='31' y='18' width='38' height='64' rx='2' fill='%230B2E6B' opacity='0.2'/><path d='M62 68 L76 82 L82 76 L68 62 Z' fill='%23C5161D'/><line x1='65' y1='65' x2='52' y2='52' stroke='%23C5161D' stroke-width='4' stroke-linecap='round'/><circle cx='42' cy='46' r='12' fill='none' stroke='%23F5B301' stroke-width='4'/><line x1='33' y1='55' x2='22' y2='66' stroke='%23F5B301' stroke-width='4' stroke-linecap='round'/></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "business",
+        "utilities"
+    ],
+    "lang": "en"
+}
